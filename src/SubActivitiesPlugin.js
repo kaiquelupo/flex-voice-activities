@@ -1,4 +1,6 @@
 import { FlexPlugin } from 'flex-plugin';
+import { ColumnDefinition } from "@twilio/flex-ui";
+import TeamViewColumn from './components/TeamViewColumn';
 
 const PLUGIN_NAME = 'SubActivitiesPlugin';
 
@@ -32,7 +34,15 @@ export default class SubActivitiesPlugin extends FlexPlugin {
           default: false
         }
       ]
-  }
+    }
+
+    flex.WorkersDataTable.Content.add(
+      <ColumnDefinition 
+        key="team" 
+        header={"Voice Activity"} 
+        content={item => <TeamViewColumn item={item} /> }
+      />
+    );
 
     flex.TeamsView.defaultProps.filters = [
       flex.TeamsView.activitiesFilter,
