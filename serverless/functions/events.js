@@ -77,7 +77,7 @@ const getWorkerInfo = async (client, event) => {
 
 exports.handler = async (context, event, callback) => {
 
-  const { ResourceType, TaskChannelUniqueName, TransferMode } = event; 
+  const { ResourceType, TaskChannelUniqueName, TransferMode, TimestampMs } = event; 
   const { WORKSPACE_SID } = process.env;
 
   if(
@@ -95,15 +95,24 @@ exports.handler = async (context, event, callback) => {
     );
 
     const voiceActivity = setVoiceActivity(event, reservationStatus);
+    const timestamp = parseInt(TimestampMs);
 
-    await client.taskrouter.workspaces(WORKSPACE_SID)
-      .workers(workerSid)
-      .update({
-        attributes: JSON.stringify({
-          ...attributes,
-          voiceActivity
+    if(
+        (timestamp > attributes.voiceActivityTimestampMs) || 
+        !attributes.voiceActivityTimestampMs
+    ){
+
+      await client.taskrouter.workspaces(WORKSPACE_SID)
+        .workers(workerSid)
+        .update({
+          attributes: JSON.stringify({
+            ...attributes,
+            voiceActivity,
+            voiceActivityTimestampMs: timestamp
+          })
         })
-      })
+
+    }
 
   }
 
