@@ -77,11 +77,11 @@ const getWorkerInfo = async (client, event) => {
 
 exports.handler = async (context, event, callback) => {
 
-  const { EventType, ResourceType, TaskChannelUniqueName, TransferMode } = event; 
+  const { ResourceType, TaskChannelUniqueName, TransferMode } = event; 
   const { WORKSPACE_SID } = process.env;
 
   if(
-    ( (ResourceType === "reservation" && EventType !== "reservation.completed")  || 
+      ((ResourceType === "reservation" )  || 
       (ResourceType === "transfer" && TransferMode === "WARM")
     ) && 
     TaskChannelUniqueName === "voice"
